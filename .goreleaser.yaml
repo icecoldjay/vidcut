@@ -1,0 +1,73 @@
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+version: 2
+
+project_name: vidcut
+
+before:
+  hooks:
+    - go mod tidy
+    - go test ./...
+
+builds:
+  - id: vidcut
+    main: .
+    binary: vidcut
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    ignore:
+      - goos: windows
+        goarch: arm64
+    ldflags:
+      - -s -w
+      - -X main.version={{.Version}}
+      - -X main.commit={{.Commit}}
+      - -X main.date={{.Date}}
+
+archives:
+  - id: default
+    formats:
+      - tar.gz
+    format_overrides:
+      - goos: windows
+        formats:
+          - zip
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    files:
+      - README.md
+      - LICENSE*
+
+checksum:
+  name_template: checksums.txt
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - "^ci:"
+
+# Optional: uncomment after creating github.com/icecoldjay/homebrew-tap
+# brews:
+#   - repository:
+#       owner: icecoldjay
+#       name: homebrew-tap
+#     directory: Formula
+#     homepage: https://github.com/icecoldjay/vidcut
+#     description: Extract a portion of a local video file
+#     license: MIT
+#     dependencies:
+#       - name: ffmpeg
+#     install: |
+#       bin.install "vidcut"
+
+release:
+  draft: false
+  prerelease: auto

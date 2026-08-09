@@ -1,0 +1,6 @@
+/vidcut
+/dist/
+*.mp4
+*.mov
+*.mkv
+*.webm
