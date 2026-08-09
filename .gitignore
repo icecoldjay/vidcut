@@ -1,0 +1,10 @@
+/vidcut
+/dist/
+*.mp4
+*.mov
+*.mkv
+*.webm
+branch_structure.json
+temp_auto_push.bat
+temp_interactive_push.bat
+.gitignore
